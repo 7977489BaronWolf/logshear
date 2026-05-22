@@ -1,52 +1,50 @@
-use crate::query::ast::Expr;
-use crate::query::eval::{eval_expr, EvalContext};
-use crate::output::formatter::{Format, format_record};
+//! Pipeline stage definitions.
+//!
+//! Each stage transforms or filters a stream of log lines.
 
-/// Result of processing a single log line through the pipeline.
-#[derive(Debug)]
-pub enum StageResult {
-    /// Line passed all filters; contains the (possibly projected) output string.
-    Pass(String),
-    /// Line was filtered out and should be skipped.
-    Skip,
-    /// A non-fatal parse warning occurred; line is still emitted.
-    Warn(String, String),
-}
+use crate::input::sampler::{SampleStrategy, Sampler};
+use crate::query::eval::Evaluator;
 
-/// A single processing stage: filter + optional field projection.
-#[derive(Debug, Clone)]
-pub struct Stage {
-    /// Optional boolean filter expression.
-    pub filter: Option<Expr>,
-    /// Fields to extract/project. Empty means emit the whole line.
-    pub fields: Vec<String>,
-    /// Output format for this stage.
-    pub format: Format,
+/// A single processing stage in the log pipeline.
+pub enum Stage {
+    /// Filter lines using a compiled query expression.
+    Filter(Evaluator),
+    /// Sample lines using a given strategy.
+    Sample(Sampler),
+    /// Limit output to at most N lines.
+    Limit(usize),
+    /// Skip the first N lines.
+    Skip(usize),
 }
 
 impl Stage {
-    pub fn new(filter: Option<Expr>, fields: Vec<String>, format: Format) -> Self {
-        Self { filter, fields, format }
+    pub fn filter(evaluator: Evaluator) -> Self {
+        Stage::Filter(evaluator)
     }
 
-    /// Process one log line through this stage.
-    pub fn process(&self, line: &str) -> StageResult {
-        let ctx = match EvalContext::parse(line) {
-            Ok(c) => c,
-            Err(e) => return StageResult::Warn(line.to_string(), e.to_string()),
-        };
+    pub fn rate_sample(n: usize) -> Self {
+        Stage::Sample(Sampler::new(SampleStrategy::Rate(n)))
+    }
 
-        // Apply filter
-        if let Some(expr) = &self.filter {
-            match eval_expr(expr, &ctx) {
-                Ok(true) => {}
-                Ok(false) => return StageResult::Skip,
-                Err(e) => return StageResult::Warn(line.to_string(), e.to_string()),
-            }
+    pub fn reservoir_sample(size: usize) -> Self {
+        Stage::Sample(Sampler::new(SampleStrategy::Reservoir(size)))
+    }
+
+    pub fn limit(n: usize) -> Self {
+        Stage::Limit(n)
+    }
+
+    pub fn skip(n: usize) -> Self {
+        Stage::Skip(n)
+    }
+
+    /// Apply the stage to a single line. Returns `true` if the line should pass through.
+    pub fn apply(&mut self, line: &str, emitted: usize, skipped: usize) -> bool {
+        match self {
+            Stage::Filter(eval) => eval.matches(line),
+            Stage::Sample(sampler) => sampler.should_keep(line),
+            Stage::Limit(n) => emitted < *n,
+            Stage::Skip(n) => skipped >= *n,
         }
-
-        // Project fields or emit full record
-        let output = format_record(&ctx, &self.fields, self.format);
-        StageResult::Pass(output)
     }
 }
