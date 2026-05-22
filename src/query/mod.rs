@@ -1,19 +1,23 @@
+pub mod ast;
+pub mod eval;
 pub mod lexer;
+pub mod optimizer;
+pub mod parser;
+
+#[cfg(test)]
+mod eval_tests;
 #[cfg(test)]
 mod lexer_tests;
-
-pub mod parser;
+#[cfg(test)]
+mod optimizer_tests;
 #[cfg(test)]
 mod parser_tests;
 
-pub use parser::{Expr, Op, ParseError, Parser, Value};
+use ast::Expr;
 
-/// Parse a query string into an AST expression.
-///
-/// # Example
-/// ```
-/// let expr = logshear::query::parse("level = \"error\" AND service = \"api\"").unwrap();
-/// ```
-pub fn parse(input: &str) -> Result<Expr, ParseError> {
-    Parser::new(input).parse()
+/// Parse a query string and return an optimized AST ready for evaluation.
+pub fn compile(input: &str) -> Result<Expr, String> {
+    let tokens = lexer::tokenize(input)?;
+    let expr = parser::parse(tokens)?;
+    Ok(optimizer::optimize(expr))
 }
