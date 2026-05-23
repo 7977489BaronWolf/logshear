@@ -1,12 +1,18 @@
+pub mod checkpoint;
 pub mod decompressor;
 pub mod encoding;
 pub mod field_extractor;
 pub mod field_filter;
 pub mod glob;
 pub mod line_counter;
+pub mod rate_limiter;
 pub mod reader;
 pub mod sampler;
+pub mod schema;
+pub mod schema_detector;
 
+#[cfg(test)]
+mod checkpoint_tests;
 #[cfg(test)]
 mod decompressor_tests;
 #[cfg(test)]
@@ -20,6 +26,12 @@ mod glob_tests;
 #[cfg(test)]
 mod line_counter_tests;
 #[cfg(test)]
+mod rate_limiter_tests;
+#[cfg(test)]
 mod reader_tests;
 #[cfg(test)]
 mod sampler_tests;
+#[cfg(test)]
+mod schema_tests;
+#[cfg(test)]
+mod schema_detector_tests;
