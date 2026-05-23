@@ -1,40 +1,43 @@
-pub mod checkpoint;
-pub mod checkpoint_tests;
-pub mod decompressor;
-pub mod decompressor_tests;
-pub mod encoding;
-pub mod encoding_tests;
-pub mod field_extractor;
-pub mod field_extractor_tests;
-pub mod field_filter;
-pub mod field_filter_tests;
-pub mod glob;
-pub mod glob_tests;
-pub mod line_counter;
-pub mod line_counter_tests;
-pub mod rate_limiter;
-pub mod rate_limiter_tests;
 pub mod reader;
-pub mod reader_tests;
+pub mod glob;
+pub mod decompressor;
+pub mod line_counter;
 pub mod sampler;
-pub mod sampler_tests;
+pub mod encoding;
+pub mod field_extractor;
+pub mod field_filter;
+pub mod rate_limiter;
 pub mod schema;
 pub mod schema_detector;
-pub mod schema_detector_tests;
-pub mod schema_tests;
+pub mod checkpoint;
 pub mod timeout;
-pub mod timeout_tests;
+pub mod batch;
 
-pub use checkpoint::Checkpoint;
-pub use decompressor::Decompressor;
-pub use encoding::EncodingReader;
-pub use field_extractor::FieldExtractor;
-pub use field_filter::FieldFilter;
-pub use glob::GlobExpander;
-pub use line_counter::LineCounter;
-pub use rate_limiter::RateLimiter;
-pub use reader::LogReader;
-pub use sampler::Sampler;
-pub use schema::Schema;
-pub use schema_detector::SchemaDetector;
-pub use timeout::{TimeoutConfig, TimeoutReader};
+#[cfg(test)]
+mod reader_tests;
+#[cfg(test)]
+mod glob_tests;
+#[cfg(test)]
+mod decompressor_tests;
+#[cfg(test)]
+mod line_counter_tests;
+#[cfg(test)]
+mod sampler_tests;
+#[cfg(test)]
+mod encoding_tests;
+#[cfg(test)]
+mod field_extractor_tests;
+#[cfg(test)]
+mod field_filter_tests;
+#[cfg(test)]
+mod rate_limiter_tests;
+#[cfg(test)]
+mod schema_tests;
+#[cfg(test)]
+mod schema_detector_tests;
+#[cfg(test)]
+mod checkpoint_tests;
+#[cfg(test)]
+mod timeout_tests;
+#[cfg(test)]
+mod batch_tests;
