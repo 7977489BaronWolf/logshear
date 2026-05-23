@@ -17,6 +17,23 @@ pub enum Expr {
     Wildcard,
 }
 
+impl Expr {
+    /// Returns `true` if this expression is a terminal (leaf) node,
+    /// i.e. it does not contain any sub-expressions.
+    pub fn is_leaf(&self) -> bool {
+        matches!(self, Expr::Contains(_) | Expr::FieldEq(_, _) | Expr::FieldCmp(_, _, _) | Expr::Wildcard)
+    }
+
+    /// Wraps this expression in a `Not`, unless it is already a `Not`,
+    /// in which case the inner expression is returned (double-negation elimination).
+    pub fn negate(self) -> Expr {
+        match self {
+            Expr::Not(inner) => *inner,
+            other => Expr::Not(Box::new(other)),
+        }
+    }
+}
+
 /// A value used in field comparisons
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
