@@ -1,4 +1,4 @@
-#[cfg(test)]
+#[cfg(tests)]
 mod tests {
     use super::super::deduplicate::Deduplicator;
 
@@ -64,5 +64,18 @@ mod tests {
     fn test_default_window_size() {
         let dedup = Deduplicator::default();
         assert_eq!(dedup.duplicates_removed(), 0);
+    }
+
+    #[test]
+    fn test_interleaved_duplicates_counted_correctly() {
+        // Verifies that duplicate counting accumulates correctly across
+        // multiple distinct lines being repeated.
+        let mut dedup = Deduplicator::new(100);
+        assert!(dedup.is_unique("alpha"));
+        assert!(dedup.is_unique("beta"));
+        assert!(!dedup.is_unique("alpha"));
+        assert!(!dedup.is_unique("beta"));
+        assert!(!dedup.is_unique("alpha"));
+        assert_eq!(dedup.duplicates_removed(), 3);
     }
 }
