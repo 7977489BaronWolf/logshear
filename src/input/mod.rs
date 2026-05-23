@@ -1,5 +1,7 @@
 pub mod decompressor;
 pub mod encoding;
+pub mod field_extractor;
+pub mod field_filter;
 pub mod glob;
 pub mod line_counter;
 pub mod reader;
@@ -9,6 +11,10 @@ pub mod sampler;
 mod decompressor_tests;
 #[cfg(test)]
 mod encoding_tests;
+#[cfg(test)]
+mod field_extractor_tests;
+#[cfg(test)]
+mod field_filter_tests;
 #[cfg(test)]
 mod glob_tests;
 #[cfg(test)]
