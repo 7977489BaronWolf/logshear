@@ -18,24 +18,52 @@ pub mod truncate;
 pub mod transform;
 pub mod tag;
 pub mod tag_config;
+pub mod redact;
+pub mod redact_config;
+pub mod mask;
+pub mod mask_config;
 
-#[cfg(test)] mod reader_tests;
-#[cfg(test)] mod glob_tests;
-#[cfg(test)] mod decompressor_tests;
-#[cfg(test)] mod line_counter_tests;
-#[cfg(test)] mod sampler_tests;
-#[cfg(test)] mod encoding_tests;
-#[cfg(test)] mod field_extractor_tests;
-#[cfg(test)] mod field_filter_tests;
-#[cfg(test)] mod rate_limiter_tests;
-#[cfg(test)] mod schema_tests;
-#[cfg(test)] mod schema_detector_tests;
-#[cfg(test)] mod checkpoint_tests;
-#[cfg(test)] mod timeout_tests;
-#[cfg(test)] mod batch_tests;
-#[cfg(test)] mod multiline_tests;
-#[cfg(test)] mod deduplicate_tests;
-#[cfg(test)] mod truncate_tests;
-#[cfg(test)] mod transform_tests;
-#[cfg(test)] mod tag_tests;
-#[cfg(test)] mod tag_config_tests;
+#[cfg(test)]
+mod reader_tests;
+#[cfg(test)]
+mod glob_tests;
+#[cfg(test)]
+mod decompressor_tests;
+#[cfg(test)]
+mod line_counter_tests;
+#[cfg(test)]
+mod sampler_tests;
+#[cfg(test)]
+mod encoding_tests;
+#[cfg(test)]
+mod field_extractor_tests;
+#[cfg(test)]
+mod field_filter_tests;
+#[cfg(test)]
+mod rate_limiter_tests;
+#[cfg(test)]
+mod schema_tests;
+#[cfg(test)]
+mod schema_detector_tests;
+#[cfg(test)]
+mod checkpoint_tests;
+#[cfg(test)]
+mod timeout_tests;
+#[cfg(test)]
+mod batch_tests;
+#[cfg(test)]
+mod multiline_tests;
+#[cfg(test)]
+mod deduplicate_tests;
+#[cfg(test)]
+mod truncate_tests;
+#[cfg(test)]
+mod transform_tests;
+#[cfg(test)]
+mod tag_tests;
+#[cfg(test)]
+mod tag_config_tests;
+#[cfg(test)]
+mod redact_tests;
+#[cfg(test)]
+mod mask_tests;
